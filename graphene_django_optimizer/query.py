@@ -258,26 +258,23 @@ class QueryOptimizer(object):
             parent_type,
         )
 
-        args = []
-        for arg in selection.arguments:
-            args.append(self._get_value(info, arg.value))
-        args = tuple(args)
+        kwargs = {arg.name.value: self._get_value(info, arg.value) for arg in selection.arguments}
 
         self._add_optimization_hints(
-            optimization_hints.select_related(info, *args),
+            optimization_hints.select_related(info, **kwargs),
             store.select_list,
         )
         self._add_optimization_hints(
-            optimization_hints.prefetch_related(info, *args),
+            optimization_hints.prefetch_related(info, **kwargs),
             store.prefetch_list,
         )
         self._add_optimization_hints(
-            optimization_hints.annotate(info, *args),
+            optimization_hints.annotate(info, **kwargs),
             store.annotate_dict,
         )
         if store.only_list is not None:
             self._add_optimization_hints(
-                optimization_hints.only(info, *args),
+                optimization_hints.only(info, **kwargs),
                 store.only_list,
             )
         return True
