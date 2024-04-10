@@ -19,11 +19,11 @@ from .models import (
 )
 
 
-def _prefetch_children(info, filter_input):
-    if filter_input is None:
-        filter_input = {}
+def _prefetch_children(info, filterInput):
+    if filterInput is None:
+        filterInput = {}
 
-    gte = filter_input.get("value", {}).get("gte", 0)
+    gte = filterInput.get("value", {}).get("gte", 0)
     return Prefetch(
         "children",
         queryset=gql_optimizer.query(Item.objects.filter(value__gte=int(gte)), info),
